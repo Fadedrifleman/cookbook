@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  username  String    @unique
+  password  String // Will be hashed
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  recipes     Recipe[]
+  ratings     Rating[]
+  comments    Comment[]
+  followers   Follow[]  @relation("Following")
+  following   Follow[]  @relation("Follower")
+}
+
+model Recipe {
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  cuisine      String
+  difficulty   String // e.g., "Easy", "Medium", "Hard"
+  cookingTime  Int // in minutes
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  authorId     String
+  author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  ingredients  Ingredient[]
+  instructions Instruction[]
+  ratings      Rating[]
+  comments     Comment[]
+}
+
+model Ingredient {
+  id       String @id @default(cuid())
+  name     String
+  quantity String // e.g., "2 cups", "1 tbsp", "100g"
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model Instruction {
+  id         String @id @default(cuid())
+  stepNumber Int
+  text       String
+  recipeId   String
+  recipe     Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id       String @id @default(cuid())
+  value    Int // 1 to 5
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId]) // A user can only rate a recipe once
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model Follow {
+  followerId  String
+  follower    User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId]) // Composite primary key
+}
