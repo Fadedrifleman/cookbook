@@ -68,6 +68,7 @@ type Query {
   me: User!
   recipe(id: ID!): Recipe!
   recipes: [Recipe!]!
+  searchRecipes(searchRecipesInput: SearchRecipesInput!): [RecipeSearchResult!]!
 }
 
 type Recipe {
@@ -81,6 +82,23 @@ type Recipe {
   ingredients: [Ingredient!]!
   instructions: [Instruction!]!
   title: String!
+}
+
+type RecipeSearchResult {
+  cookingTime: Int!
+  cuisine: String!
+  description: String
+  difficulty: String!
+  id: ID!
+  title: String!
+}
+
+input SearchRecipesInput {
+  """A list of ingredients the recipe must contain"""
+  ingredients: [String!]
+
+  """A general search term for title or description"""
+  query: String
 }
 
 input UpdateRecipeInput {

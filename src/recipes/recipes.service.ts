@@ -1,17 +1,20 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateRecipeInput } from './dto/create-recipe.input';
 import { UpdateRecipeInput } from './dto/update-recipe.input';
+import { SearchService } from '../search/search.service';
 
 @Injectable()
 export class RecipesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private searchService: SearchService,
+  ) { }
 
   async create(createRecipeInput: CreateRecipeInput, authorId: string) {
     const { ingredients, instructions, ...recipeData } = createRecipeInput;
 
-    // Prisma can create the recipe and its related ingredients/instructions in one transaction
     const recipe = await this.prisma.recipe.create({
       data: {
         ...recipeData,
@@ -30,6 +33,9 @@ export class RecipesService {
         instructions: true,
       },
     });
+
+    this.searchService.indexRecipe(recipe);
+
     return recipe;
   }
 
@@ -100,11 +106,12 @@ export class RecipesService {
         data: { instructions: { create: instructions } },
       }));
     }
-    
-    await this.prisma.$transaction(updateTransaction);
 
+    await this.prisma.$transaction(updateTransaction);
+    const updatedRecipe = await this.findOne(id);
     // Return the updated recipe with all its relations
-    return this.findOne(id);
+    this.searchService.updateRecipe(updatedRecipe);
+    return updatedRecipe;
   }
 
   async remove(id: string, userId: string) {
@@ -122,6 +129,7 @@ export class RecipesService {
     // will automatically delete its related ingredients and instructions.
     await this.prisma.recipe.delete({ where: { id } });
 
+    this.searchService.removeRecipe(id);
     return recipe; // Return the deleted recipe data
   }
 }

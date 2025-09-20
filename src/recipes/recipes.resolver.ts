@@ -8,13 +8,17 @@ import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { CreateRecipeInput } from './dto/create-recipe.input';
 import { UpdateRecipeInput } from './dto/update-recipe.input';
+import { SearchService } from '../search/search.service';
+import { SearchRecipesInput } from './dto/search-recipes.input';
+import { RecipeSearchResult } from './entities/recipe-search-result.entity';
 
 @Resolver(() => Recipe)
 export class RecipesResolver {
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly usersService: UsersService, // Inject UsersService
-  ) {}
+    private readonly usersService: UsersService,
+    private readonly searchService: SearchService,
+  ) { }
 
   @Mutation(() => Recipe)
   @UseGuards(GqlAuthGuard) // Protect this mutation
@@ -49,7 +53,7 @@ export class RecipesResolver {
   @UseGuards(GqlAuthGuard) // Protect this mutation
   removeRecipe(
     @Args('id', { type: () => ID }) id: string,
-    @CurrentUser() user: { id:string },
+    @CurrentUser() user: { id: string },
   ) {
     return this.recipesService.remove(id, user.id);
   }
@@ -64,5 +68,16 @@ export class RecipesResolver {
     // Exclude password from the response
     const { password, ...result } = author;
     return result;
+  }
+
+  @Query(() => [RecipeSearchResult], { name: 'searchRecipes' })
+  async searchRecipes(
+    @Args('searchRecipesInput') searchRecipesInput: SearchRecipesInput,
+  ) {
+    const { query, ingredients } = searchRecipesInput;
+    if (!query && (!ingredients || ingredients.length === 0)) {
+      throw new Error('Please provide a search query or at least one ingredient.');
+    }
+    return this.searchService.search(query, ingredients);
   }
 }

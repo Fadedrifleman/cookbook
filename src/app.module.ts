@@ -10,6 +10,7 @@ import { AppResolver } from './app.resolver';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { RecipesModule } from './recipes/recipes.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RecipesModule } from './recipes/recipes.module';
     UsersModule,
     AuthModule,
     RecipesModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
