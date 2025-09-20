@@ -11,6 +11,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { SearchModule } from './search/search.module';
+import { PubSubModule } from './pubsub/pubsub.module';
+import { CommentsModule } from './comments/comments.module';
+import { DateTimeResolver } from 'graphql-scalars';
 
 @Module({
   imports: [
@@ -25,14 +28,32 @@ import { SearchModule } from './search/search.module';
       // Add the context back in, which is vital for the GqlAuthGuard to work.
       // It passes the request object from the HTTP layer to the GraphQL execution context.
       context: ({ req }) => ({ req }),
+      subscriptions: {
+        'graphql-ws': true, // Enable the modern 'graphql-ws' protocol
+        'subscriptions-transport-ws': false, // Disable the older, deprecated protocol
+      },
+      // This explicitly provides our custom scalar resolver.
+      resolvers: { DateTime: DateTimeResolver },
+      // This option tells the schema builder: "Do NOT automatically create
+      // a scalar for any `Date` types you find. I will handle it."
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp', // or 'isoDate', but this prevents the default scalar
+        noDuplicatedFields: false, // Good practice to have
+      },
     }),
     PrismaModule,
     UsersModule,
     AuthModule,
     RecipesModule,
     SearchModule,
+    PubSubModule,
+    CommentsModule,
+
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [
+    AppService,
+    AppResolver
+  ],
 })
-export class AppModule {}
+export class AppModule { }
