@@ -2,6 +2,104 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateIngredientInput {
+  name: String!
+  quantity: String!
+}
+
+input CreateInstructionInput {
+  stepNumber: Int!
+  text: String!
+}
+
+input CreateRecipeInput {
+  cookingTime: Int!
+  cuisine: String!
+  description: String
+  difficulty: String!
+  ingredients: [CreateIngredientInput!]!
+  instructions: [CreateInstructionInput!]!
+  title: String!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Ingredient {
+  id: ID!
+  name: String!
+  quantity: String!
+}
+
+type Instruction {
+  id: ID!
+  stepNumber: Int!
+  text: String!
+}
+
+input LoginInput {
+  password: String!
+  username: String!
+}
+
+type LoginResponse {
+  access_token: String!
+  user: User!
+}
+
+type Mutation {
+  createRecipe(createRecipeInput: CreateRecipeInput!): Recipe!
+  login(loginInput: LoginInput!): LoginResponse!
+  register(createUserInput: CreateUserInput!): User!
+  removeRecipe(id: ID!): Recipe!
+  updateRecipe(id: ID!, updateRecipeInput: UpdateRecipeInput!): Recipe!
+}
+
 type Query {
   hello: String!
+  me: User!
+  recipe(id: ID!): Recipe!
+  recipes: [Recipe!]!
+}
+
+type Recipe {
+  author: User!
+  cookingTime: Int!
+  createdAt: DateTime!
+  cuisine: String!
+  description: String
+  difficulty: String!
+  id: ID!
+  ingredients: [Ingredient!]!
+  instructions: [Instruction!]!
+  title: String!
+}
+
+input UpdateRecipeInput {
+  cookingTime: Int
+  cuisine: String
+  description: String
+  difficulty: String
+  ingredients: [CreateIngredientInput!]
+  instructions: [CreateInstructionInput!]
+  title: String
+}
+
+type User {
+  """User's email address"""
+  email: String!
+
+  """Unique identifier for the user"""
+  id: ID!
+
+  """Unique username for the user"""
+  username: String!
 }

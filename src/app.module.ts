@@ -7,6 +7,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { RecipesModule } from './recipes/recipes.module';
 
 @Module({
   imports: [
@@ -17,11 +20,15 @@ import { AppResolver } from './app.resolver';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      playground: true, // playground is enabled by default in v12, but explicit is good
-      // Subscriptions are enabled by default with this driver, no extra config needed here for now
+      playground: true,
+      // Add the context back in, which is vital for the GqlAuthGuard to work.
+      // It passes the request object from the HTTP layer to the GraphQL execution context.
+      context: ({ req }) => ({ req }),
     }),
     PrismaModule,
-    // Feature modules will be added here
+    UsersModule,
+    AuthModule,
+    RecipesModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
