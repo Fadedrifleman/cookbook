@@ -1,99 +1,189 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CookBook Connect API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Welcome to the backend API for CookBook Connect, a modern recipe-sharing platform. This application is built with NestJS and leverages a powerful stack including GraphQL, PostgreSQL, Elasticsearch, Redis, and Google Gemini AI to provide a rich, interactive, and intelligent user experience.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Users can register, upload their recipes, discover new dishes by searching with ingredients they have at home, follow other cooks, and get AI-powered suggestions to improve their culinary creations.
 
-## Description
+## Features Implemented
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+-   **User Authentication**: Secure user registration and JWT-based login.
+-   **GraphQL API**: A fully-featured GraphQL API for all client-server communication.
+-   **Full Recipe CRUD**: Create, read, update, and delete recipes with nested ingredients and instructions.
+-   **Social Features**: Users can follow and unfollow other users.
+-   **Elasticsearch Integration**: Lightning-fast, full-text, and ingredient-based recipe search.
+-   **Real-time Updates**: Live notifications for new comments on recipes using GraphQL Subscriptions over Redis.
+-   **AI Enhancement**: Google Gemini integration to provide intelligent recipe improvement suggestions.
 
-## Project setup
+---
 
-```bash
-$ npm install
-```
+## Core Technologies
 
-## Compile and run the project
+| Category      | Technology                                    |
+| ------------- | --------------------------------------------- |
+| **Backend**   | [NestJS](https://nestjs.com/) (TypeScript)    |
+| **API**       | [GraphQL](https://graphql.org/) (Apollo)      |
+| **Database**  | [PostgreSQL](https://www.postgresql.org/)     |
+| **ORM**       | [Prisma](https://www.prisma.io/)              |
+| **Search**    | [Elasticsearch](https://www.elastic.co/)      |
+| **Real-time** | [Redis](https://redis.io/) / GraphQL Subscriptions |
+| **AI**        | [Google Gemini](https://ai.google.dev/)       |
+| **Containerization** | [Docker](https://www.docker.com/)      |
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## Getting Started
 
-# production mode
-$ npm run start:prod
-```
+Follow these instructions to get a local development environment up and running.
 
-## Run tests
+### Prerequisites
+
+-   [Node.js](https://nodejs.org/) (v20.x or later recommended)
+-   [Docker](https://www.docker.com/products/docker-desktop/) and Docker Compose
+-   A package manager like [npm](https://www.npmjs.com/) (included with Node.js)
+-   [Git](https://git-scm.com/)
+
+### 1. Clone the Repository
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/Fadedrifleman/cookbook-connect.git
+cd cookbook-connect
 ```
 
-## Deployment
+### 2. Install Dependencies
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Install all the required npm packages.
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 3. Set Up Environment Variables
 
-## Resources
+The application requires several secret keys and connection strings to function.
 
-Check out a few resources that may come in handy when working with NestJS:
+First, create a `.env` file in the project root by copying the example file:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+cp .env.example .env
+```
+*(Note: If you are on Windows, you can manually create a `.env` file and copy the contents of `.env.example` into it.)*
 
-## Support
+Now, open the newly created `.env` file and fill in the values:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```env
+# This URL should match the PostgreSQL configuration in your docker-compose.yml
+DATABASE_URL="postgresql://cookbook_user:cookbook_password@localhost:5432/cookbook_db?schema=public"
 
-## Stay in touch
+# A long, secure, random string used for signing JSON Web Tokens.
+JWT_SECRET="YourSuperSecretKeyGoesHere-MakeItLongAndRandom"
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Your API key from Google AI Studio.
+GEMINI_API_KEY="Your-Google-Gemini-API-Key-Goes-Here"
+```
+You can generate a strong `JWT_SECRET` using an online tool or via the command line: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 
-## License
+### 4. Start the Services
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+All backend services (PostgreSQL, Elasticsearch, Redis) are managed by Docker Compose. Start them in detached mode:
+
+```bash
+docker-compose up -d
+```
+To check if the containers are running, use `docker ps`. You should see `cookbook_postgres`, `cookbook_elasticsearch`, and `cookbook_redis`.
+
+### 5. Run Database Migrations
+
+With the database container running, apply the database schema using Prisma Migrate.
+
+```bash
+npx prisma migrate dev
+```
+This command will create the tables and relationships defined in `prisma/schema.prisma`.
+
+### 6. Start the Application
+
+You are now ready to start the NestJS server.
+
+```bash
+npm run start:dev
+```
+The server will start in watch mode, automatically recompiling on file changes.
+
+### 7. Access the API
+
+The GraphQL API is now running and accessible at **[http://localhost:3000/graphql](http://localhost:3000/graphql)**.
+
+Open this URL in your browser to access the Apollo GraphQL Playground, where you can explore the schema and run queries/mutations.
+
+---
+
+## Example GraphQL Operations
+
+Here are some example operations you can run in the Apollo Playground to test the API.
+
+### Register a New User
+```graphql
+mutation {
+  register(createUserInput: {
+    email: "test@example.com",
+    username: "testuser",
+    password: "password123"
+  }) {
+    id
+    username
+  }
+}
+```
+
+### Log In and Get a JWT
+```graphql
+mutation {
+  login(loginInput: {
+    username: "testuser",
+    password: "password123"
+  }) {
+    access_token
+  }
+}
+```
+*Copy the `access_token` and add it to your HTTP Headers for authenticated requests: `{"Authorization": "Bearer YOUR_TOKEN_HERE"}`*
+
+### Create a Recipe (Authenticated)
+```graphql
+mutation {
+  createRecipe(createRecipeInput: {
+    title: "Simple Tomato Pasta",
+    cuisine: "Italian",
+    difficulty: "Easy",
+    cookingTime: 20,
+    ingredients: [
+      { name: "Pasta", quantity: "200g" },
+      { name: "Canned Tomatoes", quantity: "400g" }
+    ],
+    instructions: [
+      { stepNumber: 1, text: "Boil pasta." },
+      { stepNumber: 2, text: "Heat tomatoes in a pan and serve." }
+    ]
+  }) {
+    id
+    title
+  }
+}
+```
+
+### Search for Recipes
+```graphql
+query {
+  searchRecipes(searchRecipesInput: { ingredients: ["pasta", "tomatoes"] }) {
+    id
+    title
+  }
+}
+```
+
+### Get AI Suggestions (Authenticated)
+```graphql
+query {
+  getRecipeSuggestions(recipeId: "YOUR_RECIPE_ID_HERE")
+}
+```

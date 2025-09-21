@@ -14,6 +14,7 @@ import { SearchModule } from './search/search.module';
 import { PubSubModule } from './pubsub/pubsub.module';
 import { CommentsModule } from './comments/comments.module';
 import { DateTimeResolver } from 'graphql-scalars';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { DateTimeResolver } from 'graphql-scalars';
     SearchModule,
     PubSubModule,
     CommentsModule,
+    AiModule,
 
   ],
   controllers: [AppController],

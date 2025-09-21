@@ -11,6 +11,8 @@ import { UpdateRecipeInput } from './dto/update-recipe.input';
 import { SearchService } from '../search/search.service';
 import { SearchRecipesInput } from './dto/search-recipes.input';
 import { RecipeSearchResult } from './entities/recipe-search-result.entity';
+import { AiService } from '../ai/ai.service';
+import { NotFoundException } from '@nestjs/common';
 
 @Resolver(() => Recipe)
 export class RecipesResolver {
@@ -18,6 +20,7 @@ export class RecipesResolver {
     private readonly recipesService: RecipesService,
     private readonly usersService: UsersService,
     private readonly searchService: SearchService,
+    private readonly aiService: AiService,
   ) { }
 
   @Mutation(() => Recipe)
@@ -79,5 +82,20 @@ export class RecipesResolver {
       throw new Error('Please provide a search query or at least one ingredient.');
     }
     return this.searchService.search(query, ingredients);
+  }
+
+  @Query(() => String, { name: 'getRecipeSuggestions' })
+  @UseGuards(GqlAuthGuard) // Protect this query
+  async getRecipeSuggestions(
+    @Args('recipeId', { type: () => ID }) recipeId: string,
+  ) {
+    // We need the full recipe details to create the prompt
+    const recipe = await this.recipesService.findOne(recipeId);
+    if (!recipe) {
+      throw new NotFoundException(`Recipe with ID "${recipeId}" not found`);
+    }
+
+    // Call our AI service to get the suggestions
+    return this.aiService.getRecipeSuggestions(recipe);
   }
 }

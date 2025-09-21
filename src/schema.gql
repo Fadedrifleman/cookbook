@@ -45,6 +45,11 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type FollowResponse {
+  message: String
+  success: Boolean!
+}
+
 type Ingredient {
   id: ID!
   name: String!
@@ -70,18 +75,22 @@ type LoginResponse {
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createRecipe(createRecipeInput: CreateRecipeInput!): Recipe!
+  follow(userIdToFollow: ID!): FollowResponse!
   login(loginInput: LoginInput!): LoginResponse!
   register(createUserInput: CreateUserInput!): User!
   removeRecipe(id: ID!): Recipe!
+  unfollow(userIdToUnfollow: ID!): FollowResponse!
   updateRecipe(id: ID!, updateRecipeInput: UpdateRecipeInput!): Recipe!
 }
 
 type Query {
+  getRecipeSuggestions(recipeId: ID!): String!
   hello: String!
   me: User!
   recipe(id: ID!): Recipe!
   recipes: [Recipe!]!
   searchRecipes(searchRecipesInput: SearchRecipesInput!): [RecipeSearchResult!]!
+  userProfile(username: String!): UserProfile!
 }
 
 type Recipe {
@@ -141,5 +150,16 @@ type User {
   id: ID!
 
   """Unique username for the user"""
+  username: String!
+}
+
+type UserProfile {
+  """The number of users following this user"""
+  followersCount: Int!
+
+  """The number of users this user is following"""
+  followingCount: Int!
+  id: ID!
+  recipes: [Recipe]
   username: String!
 }
